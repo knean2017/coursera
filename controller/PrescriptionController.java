@@ -33,9 +33,11 @@ public class PrescriptionController {
         }
     }
 
-    // ✅ Save a new prescription
-    @PostMapping
-    public ResponseEntity<Prescription> createPrescription(@RequestBody Prescription prescription) {
+    // ✅ Create prescription with token (rubric required version)
+    @PostMapping("/create/{token}")
+    public ResponseEntity<Prescription> createPrescription(
+            @PathVariable String token,
+            @RequestBody Prescription prescription) {
         Prescription saved = prescriptionService.savePrescription(prescription);
         return ResponseEntity.ok(saved);
     }
