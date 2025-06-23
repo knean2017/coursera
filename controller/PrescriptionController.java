@@ -1,7 +1,7 @@
 package com.project.back_end.controller;
 
 import com.project.back_end.models.Prescription;
-
+import com.project.back_end.service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,22 +12,31 @@ import java.util.List;
 @RequestMapping("/api/prescriptions")
 public class PrescriptionController {
 
+    @Autowired
+    private PrescriptionService prescriptionService;
 
-
+    // ✅ Get all prescriptions
     @GetMapping
     public ResponseEntity<List<Prescription>> getAllPrescriptions() {
-        PrescriptionController prescriptionService = null;
-        return ResponseEntity.ok(prescriptionService.getAllPrescriptions().getBody());
+        List<Prescription> prescriptions = prescriptionService.getAllPrescriptions();
+        return ResponseEntity.ok(prescriptions);
     }
 
+    // ✅ Get prescription by ID
     @GetMapping("/{id}")
     public ResponseEntity<Prescription> getPrescriptionById(@PathVariable Long id) {
-        PrescriptionController prescriptionService = null;
-        Prescription p = prescriptionService.getPrescriptionById(id).getBody();
-        if (p != null) {
-            return ResponseEntity.ok(p);
+        Prescription prescription = prescriptionService.getPrescriptionById(id);
+        if (prescription != null) {
+            return ResponseEntity.ok(prescription);
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // ✅ Save a new prescription
+    @PostMapping
+    public ResponseEntity<Prescription> createPrescription(@RequestBody Prescription prescription) {
+        Prescription saved = prescriptionService.savePrescription(prescription);
+        return ResponseEntity.ok(saved);
     }
 }
