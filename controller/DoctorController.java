@@ -37,13 +37,13 @@ public class DoctorController {
         return ResponseEntity.notFound().build();
     }
 
-    // ✅ Get availability by doctor ID, date, and role
-    @GetMapping("/{id}/availability")
+    // ✅ REQUIRED: Get availability by URL pattern '/availability/{role}/{doctorId}/{date}/{token}'
+    @GetMapping("/availability/{role}/{doctorId}/{date}/{token}")
     public ResponseEntity<?> getDoctorAvailabilityByDate(
-            @PathVariable Long id,
-            @RequestParam String date,
-            @RequestParam String role,
-            @RequestHeader("Authorization") String token) {
+            @PathVariable String role,
+            @PathVariable Long doctorId,
+            @PathVariable String date,
+            @PathVariable String token) {
 
         // Step 1: Validate token and role
         boolean isValid = tokenValidationService.validateToken(token, role);
@@ -52,7 +52,7 @@ public class DoctorController {
         }
 
         // Step 2: Get availability
-        List<DoctorAvailability> availabilityList = doctorService.getDoctorAvailabilityByDate(id, date);
+        List<DoctorAvailability> availabilityList = doctorService.getDoctorAvailabilityByDate(doctorId, date);
         return ResponseEntity.ok(availabilityList);
     }
 }
